@@ -92,6 +92,36 @@ func (s Server) Connect(_ context.Context, r *Registration) (*AuthToken, error) 
 // (when you initially receive it, it will have the name of the recipient instead).
 // TODO: Implement `Send`. If any errors occur, return any error message you'd like.
 func (s Server) Send(ctx context.Context, msg *ChatMessage) (*Success, error) {
+
+	if msg == nil {
+        return nil, errors.New("message is missing")
+    }
+
+	// other user has to be logged in to have an inbox
+    recipientInbox, ok := s.Inboxes[msg.User]
+    if !ok {
+        return nil, errors.New("user is not logged in")
+    }
+
+	// check valid sender
+    sender, ok := ctx.Value("username").(string)
+    if !ok {
+        return nil, errors.New("could not identify sender")
+    }
+
+    outgoing := &ChatMessage{
+        User: sender,
+        Body: msg.Body,
+    }
+
+    select {
+		// make sure the message is sent successfully
+    case recipientInbox <- outgoing:
+        return &Success{Ok: true}, nil
+		// throw error otherwise
+    case <-ctx.Done():
+        return nil, ctx.Err()
+    }	
 }
 
 // Implementation of the Fetch method defined in our `.proto` file.
@@ -102,6 +132,35 @@ func (s Server) Send(ctx context.Context, msg *ChatMessage) (*Success, error) {
 //
 // TODO: Implement Fetch. If any errors occur, return any error message you'd like.
 func (s Server) Fetch(ctx context.Context, _ *Empty) (*ChatMessages, error) {
+	// make sure we have a valid current user
+	user, ok := ctx.Value("username").(string)
+if !ok {
+    return nil, errors.New("could not identify current user")
+}
+
+	// retrieve the inbox
+inbox, ok := s.Inboxes[user]
+if !ok {
+    return nil, errors.New("user inbox not found")
+}
+
+	// initialize an empty Chatmessages to hold the results when we loop through the 
+result := &ChatMessages{
+        Message: []*ChatMessage{},
+    }
+
+for len(result.Message) < BATCH_SIZE { //limit the fetch call to BATCH_SIZE # of messages
+	// messages will be taken out of channel, so can be taken 
+    select {
+    case message, open := <-inbox: // keep taking messages from inbox if channel is open
+        if !open {
+            return result, nil // inbox channel was closed/empty so return results
+        }
+        result.Message = append(result.Message, message)
+    default:
+        return result, nil // inbox is empty right now
+    }
+}
 }
 
 // Implementation of the List method defined in our `.proto` file.

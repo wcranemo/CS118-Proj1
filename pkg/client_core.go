@@ -37,7 +37,7 @@ func (e *DisconnectError) Error() string {
    If any errors occur, return any error message you'd like.
 */
 func Register(client WhatsUpClient, user string) (context.Context, error) {
-
+    response
 }
 
 // A helper function that returns an active client connection to the
