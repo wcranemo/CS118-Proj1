@@ -37,7 +37,20 @@ func (e *DisconnectError) Error() string {
    If any errors occur, return any error message you'd like.
 */
 func Register(client WhatsUpClient, user string) (context.Context, error) {
-    response
+    response, err := client.Connect(
+        context.Background(), //initialize empty context
+        &Registration{SourceUser: user}, //makes pointer to Registration struct
+    )
+    if err != nil {
+        return nil, err
+    }
+
+    ctx := metadata.AppendToOutgoingContext(
+        context.Background(),
+        "token",
+        response.Token,
+    )
+    return ctx, nil
 }
 
 // A helper function that returns an active client connection to the
@@ -103,6 +116,15 @@ func Execute(client WhatsUpClient, ctx context.Context, arguments ...string) (st
             // This should print a comma-separated string of all users returned by
             // the RPC, ending with a newline character "\n", to the console.
             // The order of the users printed does not matter.
+
+            users, err := client.List(ctx, &Empty{})
+                if err != nil {
+                    return "", err
+                }
+
+        return strings.Join(users.Users, ",") + "\n", nil
+
+                
 
         case "quit":
 

@@ -35,7 +35,7 @@ message ChatMessage {
 // of ChatMessage
 
 message ChatMessages {
-    repeated ChatMessage message = 1;
+    repeated ChatMessage messages = 1;
 }
 
 service WhatsUp {

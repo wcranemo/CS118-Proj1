@@ -287,7 +287,7 @@ func (x *ChatMessage) GetBody() string {
 
 type ChatMessages struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Message       []*ChatMessage         `protobuf:"bytes,1,rep,name=message,proto3" json:"message,omitempty"`
+	Messages      []*ChatMessage         `protobuf:"bytes,1,rep,name=messages,proto3" json:"messages,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -322,9 +322,9 @@ func (*ChatMessages) Descriptor() ([]byte, []int) {
 	return file_pkg_whatsup_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *ChatMessages) GetMessage() []*ChatMessage {
+func (x *ChatMessages) GetMessages() []*ChatMessage {
 	if x != nil {
-		return x.Message
+		return x.Messages
 	}
 	return nil
 }
@@ -346,9 +346,9 @@ const file_pkg_whatsup_proto_rawDesc = "" +
 	"\x05Empty\"5\n" +
 	"\vChatMessage\x12\x12\n" +
 	"\x04user\x18\x01 \x01(\tR\x04user\x12\x12\n" +
-	"\x04body\x18\x02 \x01(\tR\x04body\">\n" +
-	"\fChatMessages\x12.\n" +
-	"\amessage\x18\x01 \x03(\v2\x14.whatsup.ChatMessageR\amessage2\xfa\x01\n" +
+	"\x04body\x18\x02 \x01(\tR\x04body\"@\n" +
+	"\fChatMessages\x120\n" +
+	"\bmessages\x18\x01 \x03(\v2\x14.whatsup.ChatMessageR\bmessages2\xfa\x01\n" +
 	"\aWhatsUp\x124\n" +
 	"\aConnect\x12\x15.whatsup.Registration\x1a\x12.whatsup.AuthToken\x12.\n" +
 	"\x04Send\x12\x14.whatsup.ChatMessage\x1a\x10.whatsup.Success\x12.\n" +
@@ -380,7 +380,7 @@ var file_pkg_whatsup_proto_goTypes = []any{
 	(*ChatMessages)(nil), // 6: whatsup.ChatMessages
 }
 var file_pkg_whatsup_proto_depIdxs = []int32{
-	5, // 0: whatsup.ChatMessages.message:type_name -> whatsup.ChatMessage
+	5, // 0: whatsup.ChatMessages.messages:type_name -> whatsup.ChatMessage
 	2, // 1: whatsup.WhatsUp.Connect:input_type -> whatsup.Registration
 	5, // 2: whatsup.WhatsUp.Send:input_type -> whatsup.ChatMessage
 	4, // 3: whatsup.WhatsUp.Fetch:input_type -> whatsup.Empty

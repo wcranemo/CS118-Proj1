@@ -45,7 +45,7 @@ func TestSingleUserAuth(t *testing.T) {
 	go func() {
 		whatsup.RegisterWhatsUpServer(realServer, whatsupService)
 		if err := realServer.Serve(listen); err != nil {
-			t.Fatalf(err.Error())
+			t.Fatal(err.Error())
 		}
 	}()
 
@@ -55,7 +55,7 @@ func TestSingleUserAuth(t *testing.T) {
 
 	conn, _, ctx, err := whatsup.ClientSetup(address, user, 3)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 	defer conn.Close()
 
@@ -94,7 +94,7 @@ func TestSingleUserInteraction(t *testing.T) {
 	go func() {
 		whatsup.RegisterWhatsUpServer(realServer, whatsupService)
 		if err := realServer.Serve(listen); err != nil {
-			t.Fatalf(err.Error())
+			t.Fatal(err.Error())
 		}
 	}()
 
@@ -104,7 +104,7 @@ func TestSingleUserInteraction(t *testing.T) {
 
 	conn, client, ctx, err := whatsup.ClientSetup(address, user, 3)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 	defer conn.Close()
 
@@ -159,7 +159,7 @@ func TestMultipleClients(t *testing.T) {
 	go func() {
 		whatsup.RegisterWhatsUpServer(realServer, whatsupService)
 		if err := realServer.Serve(listen); err != nil {
-			t.Fatalf(err.Error())
+			t.Fatal(err.Error())
 		}
 	}()
 
@@ -169,13 +169,13 @@ func TestMultipleClients(t *testing.T) {
 
 	connOne, clientOne, ctxOne, err := whatsup.ClientSetup(address, userOne, 3)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 	defer connOne.Close()
 
 	connTwo, clientTwo, ctxTwo, err := whatsup.ClientSetup(address, userTwo, 3)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 	defer connTwo.Close()
 

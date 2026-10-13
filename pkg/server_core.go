@@ -146,21 +146,22 @@ if !ok {
 
 	// initialize an empty Chatmessages to hold the results when we loop through the 
 result := &ChatMessages{
-        Message: []*ChatMessage{},
+        // Message: []*ChatMessage{},
     }
 
-for len(result.Message) < BATCH_SIZE { //limit the fetch call to BATCH_SIZE # of messages
+for len(result.Messages) < BATCH_SIZE { //limit the fetch call to BATCH_SIZE # of messages
 	// messages will be taken out of channel, so can be taken 
     select {
     case message, open := <-inbox: // keep taking messages from inbox if channel is open
         if !open {
             return result, nil // inbox channel was closed/empty so return results
         }
-        result.Message = append(result.Message, message)
+        result.Messages = append(result.Messages, message)
     default:
         return result, nil // inbox is empty right now
     }
 }
+return result, nil
 }
 
 // Implementation of the List method defined in our `.proto` file.
